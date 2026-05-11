@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    .dark select,
+    .dark textarea {
+        @apply border-gray-600 bg-gray-900 text-gray-100;
+    }
+}

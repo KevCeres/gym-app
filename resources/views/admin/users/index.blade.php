@@ -3,7 +3,6 @@
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="font-semibold text-xl text-gray-900 leading-tight">{{ __('Usuarios') }}</h2>
-                <p class="text-sm text-gray-500 mt-0.5">Cuentas del sistema (no incluye tu sesión actual).</p>
             </div>
             <a href="{{ route('users.create') }}" class="inline-flex items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition">
                 <svg class="h-4 w-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
@@ -47,7 +46,7 @@
                                 </td>
                                 <td class="whitespace-nowrap px-5 py-4 text-right text-sm">
                                     <a href="{{ route('users.edit', $user) }}" class="font-medium text-indigo-600 hover:text-indigo-500 mr-4">Editar</a>
-                                    <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar a este usuario? Esta acción no se puede deshacer.')">
+                                    <form action="{{ route('users.destroy', $user) }}" method="POST" class="inline" onsubmit="return confirm('¿Eliminar usuario?')">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="font-medium text-red-600 hover:text-red-500">
@@ -63,7 +62,7 @@
 
                 @if($users->isEmpty())
                     <div class="px-6 py-12 text-center text-sm text-gray-500 border-t border-gray-100">
-                        No hay otros usuarios registrados.
+                        Sin usuarios.
                     </div>
                 @endif
             </div>

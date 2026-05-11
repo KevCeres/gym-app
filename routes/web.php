@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExerciseController;
@@ -11,9 +12,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verified'])->name('dashboard');
 
 // RUTAS PROTEGIDAS PARA ADMIN
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -22,9 +21,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('users', UserController::class); // 2. Agregamos el recurso de usuarios
 });
 
+// Rutinas y progreso: solo rol atleta (user), no admin
+Route::middleware(['auth', 'athlete'])->group(function () {
+    Route::get('workouts/progreso', [WorkoutController::class, 'progress'])->name('workouts.progress');
+    Route::patch('workouts/{workout}/completar', [WorkoutController::class, 'toggleCompleted'])->name('workouts.toggle-completed');
+    Route::resource('workouts', WorkoutController::class);
+});
+
 // RUTAS PARA CUALQUIER USUARIO LOGUEADO
 Route::middleware('auth')->group(function () {
-    Route::resource('workouts', WorkoutController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -5,12 +5,23 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class CategoryApiController extends Controller
 {
-    public function index(): JsonResponse
+    /**
+     * Si abres /api/categories en el navegador (Accept: HTML), te lleva al CRUD web con botones.
+     * Postman/código con Accept: application/json sigue recibiendo JSON.
+     */
+    public function index(Request $request): JsonResponse|RedirectResponse
     {
+        $accept = (string) $request->header('Accept', '');
+        $asksHtml = str_contains($accept, 'text/html') && ! str_contains($accept, 'application/json');
+        if ($asksHtml) {
+            return redirect()->route('categories.index');
+        }
+
         return response()->json(Category::orderBy('name')->get());
     }
 

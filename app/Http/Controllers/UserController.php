@@ -36,7 +36,7 @@ class UserController extends Controller
             'role'     => $request->role,
         ]);
 
-        return redirect()->route('users.index')->with('success', 'Usuario creado con éxito.');
+        return redirect()->route('users.index')->with('success', 'Usuario creado.');
     }
 
     public function edit(User $user)
@@ -60,11 +60,11 @@ class UserController extends Controller
         }
 
         $user->update($data);
-        return redirect()->route('users.index')->with('success', 'Usuario actualizado correctamente.');
+        return redirect()->route('users.index')->with('success', 'Usuario actualizado.');
     }
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('users.index')->with('success', 'Usuario eliminado correctamente.');
+        return redirect()->route('users.index')->with('success', 'Usuario eliminado.');
     }
 }

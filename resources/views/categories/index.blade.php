@@ -6,10 +6,9 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <div class="flex justify-between mb-4">
-                    <h3 class="text-lg font-bold">Lista de Grupos Musculares</h3>
+                <div class="flex justify-end mb-4">
                     <a href="{{ route('categories.create') }}" class="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">
-                        + Nueva Categoría
+                        Nueva
                     </a>
                 </div>
 

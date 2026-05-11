@@ -21,7 +21,7 @@
                         </div>
 
                         <div>
-                            <x-input-label for="email" value="Correo electrónico" />
+                            <x-input-label for="email" value="Email" />
                             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $user->email)" required autocomplete="username" />
                             <x-input-error :messages="$errors->get('email')" class="mt-2" />
                         </div>
@@ -29,16 +29,16 @@
                         <div>
                             <x-input-label for="role" value="Rol" />
                             <select id="role" name="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm text-sm">
-                                <option value="user" @selected(old('role', $user->role) === 'user')>Usuario (atleta)</option>
-                                <option value="admin" @selected(old('role', $user->role) === 'admin')>Administrador (staff)</option>
+                                <option value="user" @selected(old('role', $user->role) === 'user')>Usuario</option>
+                                <option value="admin" @selected(old('role', $user->role) === 'admin')>Admin</option>
                             </select>
                             <x-input-error :messages="$errors->get('role')" class="mt-2" />
                         </div>
 
                         <div>
-                            <x-input-label for="password" value="Nueva contraseña (opcional)" />
+                            <x-input-label for="password" value="Nueva contraseña" />
                             <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" autocomplete="new-password" />
-                            <p class="mt-1 text-xs text-gray-500">Déjalo vacío para no cambiar. Si escribes una, mínimo 8 caracteres.</p>
+                            <p class="mt-1 text-xs text-gray-500">Vacío = sin cambio. Mín. 8 si escribes.</p>
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
 

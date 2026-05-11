@@ -1,48 +1,60 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-900 leading-tight">
-            {{ __('Panel de control') }}
+        <h2 class="font-semibold text-xl text-gray-900 leading-tight dark:text-gray-100">
+            {{ __('Inicio') }}
         </h2>
     </x-slot>
 
     <div class="py-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             @if (session('error'))
-                <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+                <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200" role="alert">
                     {{ session('error') }}
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100 p-6 sm:p-8">
-                <p class="text-gray-900 text-lg">
-                    {{ __('Bienvenido de nuevo,') }}
-                    <span class="font-semibold text-gray-950">{{ Auth::user()->name }}</span>
-                </p>
-                <p class="mt-2 text-sm text-gray-500">
-                    Rol:
-                    <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-0.5 font-medium text-gray-700">{{ Auth::user()->role === 'admin' ? 'Administrador' : 'Usuario' }}</span>
-                </p>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100 p-6 sm:p-8 dark:bg-gray-900 dark:border-gray-800">
+                <div class="flex items-center gap-4">
+                    @if (Auth::user()->avatar_url)
+                        <img src="{{ Auth::user()->avatar_url }}" alt="" class="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-600">
+                    @else
+                        <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xl font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200">{{ strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</span>
+                    @endif
+                    <p class="text-gray-900 text-lg dark:text-gray-100">
+                        <span class="font-semibold text-gray-950 dark:text-white">{{ Auth::user()->name }}</span>
+                        <span class="text-gray-500 font-normal text-base ms-2 dark:text-gray-400">{{ Auth::user()->role === 'admin' ? 'Admin' : 'Usuario' }}</span>
+                    </p>
+                </div>
 
-                <div class="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-                    <div class="rounded-xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-6 shadow-sm hover:shadow-md transition-shadow">
-                        <div class="flex items-start gap-3">
-                            <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white" aria-hidden="true">
-                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-                                </svg>
-                            </span>
-                            <div class="min-w-0">
-                                <h3 class="font-semibold text-gray-900">Mis rutinas</h3>
-                                <p class="mt-1 text-sm text-gray-600 leading-relaxed">Registra series, repeticiones y peso para seguir tu progreso.</p>
-                                <a href="{{ route('workouts.index') }}" class="mt-4 inline-flex text-sm font-semibold text-slate-900 hover:text-slate-700">
-                                    Ver historial →
-                                </a>
+                <div class="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-3">
+                    @if(Auth::user()->role === 'user')
+                        @if(($workoutStreak ?? null) !== null)
+                            <div class="rounded-xl border border-amber-200 bg-gradient-to-b from-amber-50 to-white p-6 shadow-sm dark:border-amber-900/50 dark:from-amber-950/30 dark:to-gray-900 lg:col-span-1">
+                                <h3 class="font-semibold text-gray-900 dark:text-gray-100">Racha</h3>
+                                <p class="mt-2 text-3xl font-bold tabular-nums text-amber-700 dark:text-amber-400">{{ $workoutStreak }} <span class="text-base font-semibold text-gray-600 dark:text-gray-400">{{ $workoutStreak === 1 ? 'día' : 'días' }}</span></p>
+                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Días consecutivos con registro, desde el más reciente.</p>
+                            </div>
+                        @endif
+                        <div class="rounded-xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-6 shadow-sm hover:shadow-md transition-shadow dark:border-slate-700 dark:from-slate-900/80 dark:to-gray-900 lg:col-span-1">
+                            <div class="flex items-start gap-3">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white" aria-hidden="true">
+                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                                    </svg>
+                                </span>
+                                <div class="min-w-0">
+                                    <h3 class="font-semibold text-gray-900 dark:text-gray-100">Rutinas</h3>
+                                    <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
+                                        <a href="{{ route('workouts.index') }}" class="text-slate-900 hover:text-slate-700 dark:text-slate-200 dark:hover:text-white">Historial</a>
+                                        <a href="{{ route('workouts.progress') }}" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Progreso</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
 
                     @if(Auth::user()->role == 'admin')
-                        <div class="rounded-xl border border-indigo-100 bg-gradient-to-b from-indigo-50/80 to-white p-6 shadow-sm hover:shadow-md transition-shadow md:col-span-2 lg:col-span-2">
+                        <div class="rounded-xl border border-indigo-100 bg-gradient-to-b from-indigo-50/80 to-white p-6 shadow-sm hover:shadow-md transition-shadow dark:border-indigo-900/40 dark:from-indigo-950/40 dark:to-gray-900 lg:col-span-3">
                             <div class="flex items-start gap-3">
                                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-600 text-white" aria-hidden="true">
                                     <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -51,23 +63,22 @@
                                     </svg>
                                 </span>
                                 <div class="min-w-0 flex-1">
-                                    <h3 class="font-semibold text-indigo-950">Administración</h3>
-                                    <p class="mt-1 text-sm text-indigo-900/70">Usuarios, categorías y ejercicios del catálogo.</p>
-                                    <ul class="mt-5 grid gap-2 sm:grid-cols-3">
+                                    <h3 class="font-semibold text-indigo-950 dark:text-indigo-200">Administración</h3>
+                                    <ul class="mt-4 grid gap-2 sm:grid-cols-3">
                                         <li>
-                                            <a href="{{ route('users.index') }}" class="flex items-center gap-2 rounded-lg border border-indigo-100 bg-white/80 px-3 py-2.5 text-sm font-medium text-indigo-900 hover:bg-indigo-50 transition-colors">
+                                            <a href="{{ route('users.index') }}" class="flex items-center gap-2 rounded-lg border border-indigo-100 bg-white/80 px-3 py-2.5 text-sm font-medium text-indigo-900 hover:bg-indigo-50 transition-colors dark:border-indigo-800 dark:bg-gray-800/80 dark:text-indigo-100 dark:hover:bg-indigo-950/50">
                                                 <svg class="h-4 w-4 text-indigo-600 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.438 0 9.337 9.337 0 0 0 4.121.952 9.38 9.38 0 0 0 2.625-.372M12 21a9 9 0 1 0-9-9 9 9 0 0 0 9 9Zm0 0c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3 7.5 7.03 7.5 12 9.515 21 12 21Z" /></svg>
                                                 Usuarios
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('categories.index') }}" class="flex items-center gap-2 rounded-lg border border-indigo-100 bg-white/80 px-3 py-2.5 text-sm font-medium text-indigo-900 hover:bg-indigo-50 transition-colors">
+                                            <a href="{{ route('categories.index') }}" class="flex items-center gap-2 rounded-lg border border-indigo-100 bg-white/80 px-3 py-2.5 text-sm font-medium text-indigo-900 hover:bg-indigo-50 transition-colors dark:border-indigo-800 dark:bg-gray-800/80 dark:text-indigo-100 dark:hover:bg-indigo-950/50">
                                                 <svg class="h-4 w-4 text-indigo-600 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" /></svg>
                                                 Categorías
                                             </a>
                                         </li>
                                         <li>
-                                            <a href="{{ route('exercises.index') }}" class="flex items-center gap-2 rounded-lg border border-indigo-100 bg-white/80 px-3 py-2.5 text-sm font-medium text-indigo-900 hover:bg-indigo-50 transition-colors">
+                                            <a href="{{ route('exercises.index') }}" class="flex items-center gap-2 rounded-lg border border-indigo-100 bg-white/80 px-3 py-2.5 text-sm font-medium text-indigo-900 hover:bg-indigo-50 transition-colors dark:border-indigo-800 dark:bg-gray-800/80 dark:text-indigo-100 dark:hover:bg-indigo-950/50">
                                                 <svg class="h-4 w-4 text-indigo-600 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 21h16.5M4.5 3h15M6 3v18m3-18v18m3-18v18m3-18v18m3-18v18M9 3.75h7.5M9 16.5h7.5" /></svg>
                                                 Ejercicios
                                             </a>
