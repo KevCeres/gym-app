@@ -3,11 +3,16 @@
         <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="font-semibold text-xl text-gray-900 leading-tight dark:text-gray-100">Nueva serie</h2>
-                <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Una o varias líneas · volumen en vivo · plantillas opcionales</p>
             </div>
-            <div class="flex flex-wrap gap-3 text-sm font-semibold">
-                <a href="{{ route('routine-templates.index') }}" class="text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white">Plantillas</a>
-                <a href="{{ route('workouts.progress') }}" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Progreso</a>
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                {{-- Estilo pill: secundario (fondo claro + borde), como «Historial» --}}
+                <a href="{{ route('routine-templates.index') }}" class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-6 py-2.5 text-sm font-semibold text-slate-900 shadow-sm transition hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700">
+                    Plantillas
+                </a>
+                {{-- Estilo pill: primario (relleno oscuro + texto blanco), como «Nueva serie» --}}
+                <a href="{{ route('workouts.progress') }}" class="inline-flex items-center justify-center rounded-full bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100">
+                    Progreso
+                </a>
             </div>
         </div>
     </x-slot>
@@ -156,12 +161,11 @@
                         <div class="sm:col-span-2">
                             <x-input-label for="plantilla" value="Cargar desde plantilla (opcional)" />
                             <select id="plantilla" x-model="selectedTemplate" @@change="onTemplateChange()" class="mt-1 block w-full rounded-xl border-slate-200 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white">
-                                <option value="">— Sin plantilla (añade ejercicios a mano) —</option>
+                                <option value="">— Agrega ejercicios o selecciona una plantilla —</option>
                                 @foreach ($routineTemplates as $rt)
                                     <option value="{{ $rt->id }}">{{ $rt->name }}</option>
                                 @endforeach
                             </select>
-                            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">Al elegir una plantilla se rellenan los ejercicios y reps/series sugeridos; ajusta sobre todo el peso.</p>
                         </div>
                         <div>
                             <x-input-label for="workout_date" value="Fecha" />

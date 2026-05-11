@@ -3,7 +3,7 @@
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
                 <h2 class="font-semibold text-xl text-gray-900 leading-tight dark:text-gray-100">Progreso</h2>
-                <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Resumen por ejercicio (solo series completadas)</p>
+                <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Resumen por ejercicio</p>
             </div>
             <div class="flex flex-wrap gap-2">
                 <a href="{{ route('workouts.index') }}" class="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
@@ -49,7 +49,7 @@
                         type="search"
                         name="q"
                         autocomplete="off"
-                        placeholder="Buscar por nombre o categoría (resultados al instante)…"
+                        placeholder="Buscar por nombre o categoría.."
                         class="w-full rounded-2xl border border-slate-200 bg-white py-3.5 ps-12 pe-28 text-sm text-slate-900 shadow-sm ring-indigo-500/20 placeholder:text-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 dark:border-slate-600 dark:bg-slate-900 dark:text-white dark:placeholder:text-slate-500"
                     >
                     <div class="absolute inset-y-1 end-1 flex items-center gap-1">
@@ -116,7 +116,7 @@
                                         <span class="text-sm font-bold tabular-nums text-indigo-600 dark:text-indigo-400">{{ (int) $pct }}%</span>
                                     </div>
                                     <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
-                                        <div class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500" style="width: {{ max(0, min(100, (int) $pct)) }}%"></div>
+                                        <div class="progress-bar-fill h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500" data-width-pct="{{ max(0, min(100, (int) $pct)) }}"></div>
                                     </div>
                                     <p class="mt-2 text-xs text-slate-600 dark:text-slate-400">
                                         @if($ls > 1){{ $ls }}× @endif{{ $latest->reps }} reps · {{ number_format($latest->weight, 1, ',', '.') }} kg
@@ -148,6 +148,12 @@
     @if($exerciseTotalCount > 0)
         <script>
             (function () {
+                document.querySelectorAll('.progress-bar-fill[data-width-pct]').forEach(function (el) {
+                    var v = parseInt(el.getAttribute('data-width-pct'), 10);
+                    if (isNaN(v)) v = 0;
+                    el.style.width = Math.min(100, Math.max(0, v)) + '%';
+                });
+
                 var input = document.getElementById('progress-search');
                 var list = document.getElementById('progress-exercise-list');
                 if (!input || !list) return;

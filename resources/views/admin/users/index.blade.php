@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div>
             <h2 class="font-semibold text-xl text-gray-900 leading-tight dark:text-gray-100">{{ __('Usuarios') }}</h2>
-            <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Cuentas del sistema (no incluye tu sesión actual)</p>
+            <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Cuentas del sistema:</p>
         </div>
     </x-slot>
 

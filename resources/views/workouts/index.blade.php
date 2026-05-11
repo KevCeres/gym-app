@@ -37,7 +37,6 @@
                         <div class="p-5 sm:p-6">
                             <p class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Ejercicios distintos</p>
                             <p class="mt-1 text-3xl font-bold tabular-nums tracking-tight text-slate-900 dark:text-white">{{ $summary['ejercicios_distintos'] }}</p>
-                            <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">Ejercicios con al menos un registro · <span class="font-medium text-slate-600 dark:text-slate-300">{{ $entriesCount }} entradas</span> en total</p>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4">
