@@ -17,7 +17,7 @@
 
     <div class="py-10">
         <div class="max-w-5xl mx-auto sm:px-6 lg:px-8 space-y-4">
-            <p class="text-xs text-gray-500 dark:text-gray-400">Solo entrenos marcados como <strong class="font-medium text-gray-700 dark:text-gray-300">hechos</strong> entran en el progreso.</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">Solo series en estado <strong class="font-medium text-gray-700 dark:text-gray-300">completado</strong> entran en el progreso.</p>
             <div>
             @if($perExercise->isEmpty())
                 <div class="rounded-xl border border-dashed border-gray-200 bg-white p-12 text-center text-gray-600 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-400">

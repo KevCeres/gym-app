@@ -42,11 +42,13 @@
                             <x-input-error :messages="$errors->get('weight')" class="mt-2" />
                         </div>
                         <div class="md:col-span-2">
-                            <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                            <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Estado al guardar</p>
+                            <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">Por defecto queda <strong class="font-semibold">pendiente</strong>. Márcalo solo si ya terminaste esa serie.</p>
+                            <label class="mt-2 inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                 <input type="checkbox" name="mark_completed" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800" @checked(old('mark_completed')) />
-                                Ya lo hice (marcar como realizado)
+                                Guardar como <span class="font-semibold text-emerald-700 dark:text-emerald-400">completado</span>
                             </label>
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Sin marcar, queda pendiente; puedes completarlo luego en el historial.</p>
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Si no marcas la casilla, podrás pasarla a completado cuando quieras desde el historial.</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-3">

@@ -41,9 +41,10 @@
                             <x-input-error :messages="$errors->get('weight')" class="mt-2" />
                         </div>
                         <div class="md:col-span-2">
-                            <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                            <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Estado de la serie</p>
+                            <label class="mt-2 inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                                 <input type="checkbox" name="mark_completed" value="1" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:border-gray-600 dark:bg-gray-800" @checked(old('mark_completed', $workout->completed)) />
-                                Ya lo hice (realizado)
+                                <span><strong class="font-semibold">Completado</strong> (desmarca para dejarlo pendiente)</span>
                             </label>
                         </div>
                     </div>

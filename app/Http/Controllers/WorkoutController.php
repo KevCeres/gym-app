@@ -31,21 +31,21 @@ class WorkoutController extends Controller
                 })->values();
 
                 $seriesTotal = (int) $dayWorkouts->sum(fn (Workout $w) => $w->effective_series_count);
-                $seriesHechas = (int) $dayWorkouts->where('completed', true)->sum(fn (Workout $w) => $w->effective_series_count);
+                $seriesCompletadas = (int) $dayWorkouts->where('completed', true)->sum(fn (Workout $w) => $w->effective_series_count);
 
                 return [
                     'workouts' => $dayWorkouts,
                     'day_series' => $seriesTotal,
-                    'day_series_hechas' => $seriesHechas,
+                    'day_series_completadas' => $seriesCompletadas,
                 ];
             });
 
-        $hechos = $workouts->where('completed', true);
+        $completados = $workouts->where('completed', true);
 
         $summary = [
             'dias_distintos' => $workoutsByDate->count(),
-            'series_totales' => (int) $hechos->sum(fn (Workout $w) => $w->effective_series_count),
-            'volumen_total_kg' => round($hechos->sum(fn (Workout $w) => $w->lineVolume()), 1),
+            'series_totales' => (int) $completados->sum(fn (Workout $w) => $w->effective_series_count),
+            'volumen_total_kg' => round($completados->sum(fn (Workout $w) => $w->lineVolume()), 1),
         ];
 
         return view('workouts.index', compact('workoutsByDate', 'summary'));
@@ -170,7 +170,7 @@ class WorkoutController extends Controller
 
         return redirect()
             ->route('workouts.index')
-            ->with('success', $next ? 'Marcado como realizado.' : 'Marcado como pendiente.');
+            ->with('success', $next ? 'Marcado como completado.' : 'Marcado como pendiente.');
     }
 
     public function destroy(Workout $workout)

@@ -30,14 +30,14 @@
                     <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Con al menos un registro</p>
                 </div>
                 <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
-                    <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Series hechas</p>
+                    <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Series completadas</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ $summary['series_totales'] }}</p>
-                    <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Solo completadas</p>
+                    <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Solo series en estado completado</p>
                 </div>
                 <div class="rounded-xl border border-gray-100 bg-white p-4 shadow-sm dark:border-gray-800 dark:bg-gray-900">
                     <p class="text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">Volumen</p>
                     <p class="mt-1 text-2xl font-semibold text-gray-900 dark:text-gray-100">{{ number_format($summary['volumen_total_kg'], 0, ',', '.') }}</p>
-                    <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Solo completadas</p>
+                    <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Solo series en estado completado</p>
                 </div>
             </div>
 
@@ -56,8 +56,8 @@
                                 </h3>
                                 <span class="text-sm text-gray-500 dark:text-gray-400">
                                     {{ $day['workouts']->count() }} {{ $day['workouts']->count() === 1 ? 'entrada' : 'entradas' }} ·
-                                    @if($day['day_series_hechas'] !== $day['day_series'])
-                                        {{ $day['day_series_hechas'] }}/{{ $day['day_series'] }} series
+                                    @if($day['day_series_completadas'] !== $day['day_series'])
+                                        {{ $day['day_series_completadas'] }}/{{ $day['day_series'] }} series
                                     @else
                                         {{ $day['day_series'] }} series
                                     @endif
@@ -73,7 +73,7 @@
                                             <th class="px-5 py-3 text-right">Reps</th>
                                             <th class="px-5 py-3 text-right">Peso</th>
                                             <th class="px-5 py-3 text-right">Volumen</th>
-                                            <th class="px-5 py-3 text-center">Estado</th>
+                                            <th class="px-5 py-3 text-center">Estado de la serie</th>
                                             <th class="px-5 py-3 text-right">Acciones</th>
                                         </tr>
                                     </thead>
@@ -92,8 +92,8 @@
                                                     <form action="{{ route('workouts.toggle-completed', $workout) }}" method="POST" class="inline">
                                                         @csrf
                                                         @method('PATCH')
-                                                        <button type="submit" class="inline-flex items-center justify-center rounded-md px-2 py-1 text-xs font-semibold ring-1 ring-inset @if($workout->completed) bg-emerald-50 text-emerald-800 ring-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-200 dark:ring-emerald-800 @else bg-amber-50 text-amber-900 ring-amber-200 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-100 dark:ring-amber-800 @endif" title="{{ $workout->completed ? 'Volver a pendiente' : 'Marcar como realizado' }}">
-                                                            {{ $workout->completed ? 'Hecho' : 'Marcar realizado' }}
+                                                        <button type="submit" class="inline-flex items-center justify-center rounded-md px-3 py-1 text-xs font-semibold ring-1 ring-inset transition @if($workout->completed) bg-emerald-50 text-emerald-800 ring-emerald-200 hover:bg-emerald-100 dark:bg-emerald-950/50 dark:text-emerald-200 dark:ring-emerald-800 dark:hover:bg-emerald-900/40 @else bg-amber-50 text-amber-900 ring-amber-200 hover:bg-amber-100 dark:bg-amber-950/40 dark:text-amber-100 dark:ring-amber-800 dark:hover:bg-amber-900/40 @endif" title="Clic para cambiar estado">
+                                                            {{ $workout->completed ? 'Completado' : 'Pendiente' }}
                                                         </button>
                                                     </form>
                                                 </td>
