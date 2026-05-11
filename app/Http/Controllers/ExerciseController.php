@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Exercise;
 use App\Models\Category;
+use App\Models\Exercise;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,13 +11,15 @@ class ExerciseController extends Controller
 {
     public function index()
     {
-        $exercises = Exercise::with('category')->get();
+        $exercises = Exercise::query()->with('category')->orderBy('name')->get();
+
         return view('exercises.index', compact('exercises'));
     }
 
     public function create()
     {
         $categories = Category::all();
+
         return view('exercises.create', compact('categories'));
     }
 
@@ -37,12 +39,14 @@ class ExerciseController extends Controller
         }
 
         Exercise::create($data);
+
         return redirect()->route('exercises.index')->with('success', 'Ejercicio creado.');
     }
 
     public function edit(Exercise $exercise)
     {
         $categories = Category::all();
+
         return view('exercises.edit', compact('exercise', 'categories'));
     }
 
@@ -64,6 +68,7 @@ class ExerciseController extends Controller
         }
 
         $exercise->update($data);
+
         return redirect()->route('exercises.index')->with('success', 'Ejercicio actualizado.');
     }
 
@@ -73,6 +78,7 @@ class ExerciseController extends Controller
             Storage::disk('public')->delete($exercise->image);
         }
         $exercise->delete();
+
         return redirect()->route('exercises.index')->with('success', 'Ejercicio eliminado.');
     }
 }

@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
- 
     public function index()
     {
-        $users = User::where('id', '!=', Auth::id())->get();
+        $users = User::query()
+            ->where('id', '!=', Auth::id())
+            ->orderBy('name')
+            ->get();
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -23,17 +26,17 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|string|email|max:255|unique:users',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'role'     => 'required|in:user,admin',
+            'role' => 'required|in:user,admin',
         ]);
 
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => $request->password,
-            'role'     => $request->role,
+            'role' => $request->role,
         ]);
 
         return redirect()->route('users.index')->with('success', 'Usuario creado.');
@@ -47,9 +50,9 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email,' . $user->id,
-            'role'     => 'required|in:user,admin',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,'.$user->id,
+            'role' => 'required|in:user,admin',
             'password' => 'nullable|string|min:8',
         ]);
 
@@ -60,11 +63,14 @@ class UserController extends Controller
         }
 
         $user->update($data);
+
         return redirect()->route('users.index')->with('success', 'Usuario actualizado.');
     }
+
     public function destroy(User $user)
     {
         $user->delete();
+
         return redirect()->route('users.index')->with('success', 'Usuario eliminado.');
     }
 }

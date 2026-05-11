@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Workout;
 use App\Models\Exercise;
+use App\Models\RoutineTemplate;
+use App\Models\Workout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use JsonException;
 
 class WorkoutController extends Controller
 {
@@ -40,12 +43,8 @@ class WorkoutController extends Controller
                 ];
             });
 
-        $completados = $workouts->where('completed', true);
-
         $summary = [
-            'dias_distintos' => $workoutsByDate->count(),
-            'series_totales' => (int) $completados->sum(fn (Workout $w) => $w->effective_series_count),
-            'volumen_total_kg' => round($completados->sum(fn (Workout $w) => $w->lineVolume()), 1),
+            'ejercicios_distintos' => (int) $workouts->pluck('exercise_id')->unique()->count(),
         ];
 
         return view('workouts.index', compact('workoutsByDate', 'summary'));
@@ -87,39 +86,104 @@ class WorkoutController extends Controller
             ];
         })->sortBy(fn (array $row) => $row['exercise']->name)->values();
 
-        return view('workouts.progress', compact('perExercise'));
+        $exerciseTotalCount = $perExercise->count();
+
+        return view('workouts.progress', [
+            'perExercise' => $perExercise,
+            'exerciseTotalCount' => $exerciseTotalCount,
+        ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $exercises = Exercise::all();
-        return view('workouts.create', compact('exercises'));
+        $exercises = Exercise::query()->with('category')->orderBy('name')->get();
+
+        $exercisesForJs = $exercises->map(fn (Exercise $e) => [
+            'id' => $e->id,
+            'name' => $e->name,
+            'category' => $e->category?->name,
+            'image' => $e->image ? asset('storage/'.$e->image) : null,
+            'haystack' => mb_strtolower($e->name.' '.($e->category?->name ?? '')),
+        ])->values()->all();
+
+        $templates = RoutineTemplate::query()
+            ->where('user_id', Auth::id())
+            ->with(['items' => fn ($q) => $q->orderBy('sort_order'), 'items.exercise.category'])
+            ->orderBy('name')
+            ->get();
+
+        $templatesForJs = $templates->map(fn (RoutineTemplate $t) => [
+            'id' => $t->id,
+            'name' => $t->name,
+            'items' => $t->items->map(fn ($i) => [
+                'exercise_id' => $i->exercise_id,
+                'default_reps' => $i->default_reps ?? 10,
+                'default_series_count' => max(1, (int) ($i->default_series_count ?? 1)),
+                'name' => $i->exercise->name,
+                'category' => $i->exercise->category?->name,
+                'image' => $i->exercise->image ? asset('storage/'.$i->exercise->image) : null,
+            ]),
+        ])->values()->all();
+
+        $prefillTemplateId = null;
+        if ($request->filled('plantilla')) {
+            $tid = (int) $request->query('plantilla');
+            if ($templates->contains('id', $tid)) {
+                $prefillTemplateId = $tid;
+            }
+        }
+
+        $defaultWorkoutDate = date('Y-m-d');
+
+        try {
+            $workoutCreatePayloadJson = json_encode([
+                'exercises' => $exercisesForJs,
+                'templates' => $templatesForJs,
+                'prefillTemplateId' => $prefillTemplateId,
+                'defaultDate' => $defaultWorkoutDate,
+            ], JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
+        } catch (JsonException) {
+            $workoutCreatePayloadJson = '{}';
+        }
+
+        return view('workouts.create', [
+            'routineTemplates' => $templates,
+            'defaultWorkoutDate' => $defaultWorkoutDate,
+            'workoutCreatePayloadJson' => $workoutCreatePayloadJson,
+        ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'exercise_id' => 'required|exists:exercises,id',
-            'reps' => 'required|integer|min:1',
-            'weight' => 'required|numeric|min:0',
             'workout_date' => 'required|date',
-            'series_count' => 'required|integer|min:1|max:30',
+            'mark_completed' => 'sometimes|boolean',
+            'lines' => 'required|array|min:1|max:40',
+            'lines.*.exercise_id' => 'required|exists:exercises,id',
+            'lines.*.reps' => 'required|integer|min:1|max:999',
+            'lines.*.weight' => 'required|numeric|min:0',
+            'lines.*.series_count' => 'required|integer|min:1|max:30',
         ]);
 
-        $count = (int) $validated['series_count'];
+        $completed = $request->boolean('mark_completed');
 
-        Workout::create([
-            'user_id' => Auth::id(),
-            'exercise_id' => (int) $validated['exercise_id'],
-            'reps' => $validated['reps'],
-            'weight' => $validated['weight'],
-            'workout_date' => $validated['workout_date'],
-            'series_count' => $count,
-            'set_number' => 1,
-            'completed' => $request->boolean('mark_completed'),
-        ]);
+        DB::transaction(function () use ($validated, $completed) {
+            foreach ($validated['lines'] as $line) {
+                Workout::create([
+                    'user_id' => Auth::id(),
+                    'exercise_id' => (int) $line['exercise_id'],
+                    'reps' => (int) $line['reps'],
+                    'weight' => $line['weight'],
+                    'workout_date' => $validated['workout_date'],
+                    'series_count' => (int) $line['series_count'],
+                    'set_number' => 1,
+                    'completed' => $completed,
+                ]);
+            }
+        });
 
-        $message = $count === 1 ? 'Guardado.' : "Guardado ({$count} series).";
+        $n = count($validated['lines']);
+        $message = $n === 1 ? 'Serie guardada.' : "Guardadas {$n} series.";
 
         return redirect()->route('workouts.index')->with('success', $message);
     }
@@ -130,6 +194,7 @@ class WorkoutController extends Controller
             abort(403);
         }
         $exercises = Exercise::all();
+
         return view('workouts.edit', compact('workout', 'exercises'));
     }
 

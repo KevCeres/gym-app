@@ -9,7 +9,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::query()->orderBy('name')->get();
+
         return view('categories.index', compact('categories'));
     }
 
@@ -22,6 +23,7 @@ class CategoryController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255']);
         Category::create($request->all());
+
         return redirect()->route('categories.index')->with('success', 'Categoría creada.');
     }
 
@@ -34,12 +36,14 @@ class CategoryController extends Controller
     {
         $request->validate(['name' => 'required|string|max:255']);
         $category->update($request->all());
+
         return redirect()->route('categories.index')->with('success', 'Categoría actualizada.');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
+
         return redirect()->route('categories.index')->with('success', 'Categoría eliminada.');
     }
 }

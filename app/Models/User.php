@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->hasMany(Workout::class);
     }
 
+    public function routineTemplates(): HasMany
+    {
+        return $this->hasMany(RoutineTemplate::class);
+    }
+
     protected static function booted(): void
     {
         static::deleting(function (User $user): void {

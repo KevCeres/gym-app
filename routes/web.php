@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExerciseController;
-use App\Http\Controllers\WorkoutController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoutineTemplateController;
 use App\Http\Controllers\UserController; // 1. IMPORTANTE: Agregamos el de Usuarios
+use App\Http\Controllers\WorkoutController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -25,6 +26,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 Route::middleware(['auth', 'athlete'])->group(function () {
     Route::get('workouts/progreso', [WorkoutController::class, 'progress'])->name('workouts.progress');
     Route::patch('workouts/{workout}/completar', [WorkoutController::class, 'toggleCompleted'])->name('workouts.toggle-completed');
+    Route::resource('routine-templates', RoutineTemplateController::class)->except(['show']);
     Route::resource('workouts', WorkoutController::class);
 });
 

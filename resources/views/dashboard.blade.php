@@ -1,11 +1,14 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-900 leading-tight dark:text-gray-100">
-            {{ __('Inicio') }}
-        </h2>
+        <div>
+            <h2 class="font-semibold text-xl text-gray-900 leading-tight dark:text-gray-100">
+                {{ __('Inicio') }}
+            </h2>
+            <p class="mt-0.5 text-sm text-gray-500 dark:text-gray-400">Resumen y accesos rápidos</p>
+        </div>
     </x-slot>
 
-    <div class="py-10">
+    <div class="min-h-[40vh] bg-gradient-to-b from-slate-50 via-white to-indigo-50/30 py-10 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950/20">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             @if (session('error'))
                 <div class="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200" role="alert">
@@ -13,42 +16,74 @@
                 </div>
             @endif
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-xl border border-gray-100 p-6 sm:p-8 dark:bg-gray-900 dark:border-gray-800">
-                <div class="flex items-center gap-4">
-                    @if (Auth::user()->avatar_url)
-                        <img src="{{ Auth::user()->avatar_url }}" alt="" class="h-14 w-14 shrink-0 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-600">
-                    @else
-                        <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gray-200 text-xl font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-200">{{ strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</span>
-                    @endif
-                    <p class="text-gray-900 text-lg dark:text-gray-100">
-                        <span class="font-semibold text-gray-950 dark:text-white">{{ Auth::user()->name }}</span>
-                        <span class="text-gray-500 font-normal text-base ms-2 dark:text-gray-400">{{ Auth::user()->role === 'admin' ? 'Admin' : 'Usuario' }}</span>
-                    </p>
-                </div>
+            <div class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-md shadow-slate-200/40 ring-1 ring-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:shadow-none dark:ring-slate-800">
+                <div class="h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500" aria-hidden="true"></div>
+                <div class="p-6 sm:p-8">
+                    <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                        @if (Auth::user()->avatar_url)
+                            <img src="{{ Auth::user()->avatar_url }}" alt="" class="h-16 w-16 shrink-0 rounded-2xl object-cover ring-2 ring-slate-100 dark:ring-slate-700">
+                        @else
+                            <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-200 to-slate-300 text-2xl font-bold text-slate-700 dark:from-slate-600 dark:to-slate-700 dark:text-slate-200">{{ strtoupper(mb_substr(Auth::user()->name, 0, 1)) }}</span>
+                        @endif
+                        <div>
+                            <p class="text-xl font-bold text-slate-900 dark:text-white">{{ Auth::user()->name }}</p>
+                            <p class="mt-1 inline-flex rounded-lg bg-slate-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-slate-600 dark:bg-slate-800 dark:text-slate-300">{{ Auth::user()->role === 'admin' ? 'Admin' : 'Usuario' }}</p>
+                        </div>
+                    </div>
 
                 <div class="mt-8 grid grid-cols-1 gap-5 lg:grid-cols-3">
                     @if(Auth::user()->role === 'user')
-                        @if(($workoutStreak ?? null) !== null)
-                            <div class="rounded-xl border border-amber-200 bg-gradient-to-b from-amber-50 to-white p-6 shadow-sm dark:border-amber-900/50 dark:from-amber-950/30 dark:to-gray-900 lg:col-span-1">
-                                <h3 class="font-semibold text-gray-900 dark:text-gray-100">Racha</h3>
-                                <p class="mt-2 text-3xl font-bold tabular-nums text-amber-700 dark:text-amber-400">{{ $workoutStreak }} <span class="text-base font-semibold text-gray-600 dark:text-gray-400">{{ $workoutStreak === 1 ? 'día' : 'días' }}</span></p>
-                                <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Días consecutivos con registro, desde el más reciente.</p>
-                            </div>
-                        @endif
-                        <div class="rounded-xl border border-slate-200 bg-gradient-to-b from-slate-50 to-white p-6 shadow-sm hover:shadow-md transition-shadow dark:border-slate-700 dark:from-slate-900/80 dark:to-gray-900 lg:col-span-1">
-                            <div class="flex items-start gap-3">
-                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-white" aria-hidden="true">
-                                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-                                    </svg>
-                                </span>
-                                <div class="min-w-0">
-                                    <h3 class="font-semibold text-gray-900 dark:text-gray-100">Rutinas</h3>
-                                    <div class="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold">
-                                        <a href="{{ route('workouts.index') }}" class="text-slate-900 hover:text-slate-700 dark:text-slate-200 dark:hover:text-white">Historial</a>
-                                        <a href="{{ route('workouts.progress') }}" class="text-indigo-600 hover:text-indigo-500 dark:text-indigo-400">Progreso</a>
+                        <div class="rounded-2xl border border-slate-200/90 bg-gradient-to-br from-white to-slate-50/90 p-6 shadow-sm dark:border-slate-700 dark:from-slate-900 dark:to-slate-900/80 lg:col-span-3">
+                            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="flex items-center gap-3">
+                                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-slate-900 text-white shadow-md dark:bg-slate-100 dark:text-slate-900" aria-hidden="true">
+                                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+                                        </svg>
+                                    </span>
+                                    <div>
+                                        <h3 class="text-lg font-bold text-slate-900 dark:text-white">Tu entreno</h3>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">Historial, progreso y plantillas</p>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                                <a href="{{ route('workouts.index') }}" class="group flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm ring-1 ring-slate-100 transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-slate-600 dark:bg-slate-800/50 dark:ring-slate-700 dark:hover:border-slate-500">
+                                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200" aria-hidden="true">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /></svg>
+                                    </span>
+                                    <span class="min-w-0 text-left">
+                                        <span class="block font-semibold text-slate-900 group-hover:text-slate-700 dark:text-white dark:group-hover:text-slate-100">Historial</span>
+                                        <span class="mt-0.5 block text-xs text-slate-500 dark:text-slate-400">Series por día</span>
+                                    </span>
+                                </a>
+                                <a href="{{ route('workouts.progress') }}" class="group flex items-center gap-4 rounded-2xl border border-indigo-200/80 bg-gradient-to-br from-indigo-50 to-white p-4 shadow-sm ring-1 ring-indigo-100/80 transition hover:-translate-y-0.5 hover:shadow-md dark:border-indigo-800/60 dark:from-indigo-950/40 dark:to-slate-900 dark:ring-indigo-900/40">
+                                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-sm" aria-hidden="true">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" /></svg>
+                                    </span>
+                                    <span class="min-w-0 text-left">
+                                        <span class="block font-semibold text-indigo-950 group-hover:text-indigo-800 dark:text-indigo-100">Progreso</span>
+                                        <span class="mt-0.5 block text-xs text-indigo-700/80 dark:text-indigo-300/80">Por ejercicio</span>
+                                    </span>
+                                </a>
+                                <a href="{{ route('workouts.create') }}" class="group flex items-center gap-4 rounded-2xl border border-emerald-300/80 bg-gradient-to-br from-emerald-50 to-white p-4 shadow-sm ring-1 ring-emerald-100 transition hover:-translate-y-0.5 hover:shadow-md dark:border-emerald-800/50 dark:from-emerald-950/30 dark:to-slate-900 dark:ring-emerald-900/30">
+                                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm" aria-hidden="true">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" /></svg>
+                                    </span>
+                                    <span class="min-w-0 text-left">
+                                        <span class="block font-semibold text-emerald-950 group-hover:text-emerald-900 dark:text-emerald-100">Nueva serie</span>
+                                        <span class="mt-0.5 block text-xs text-emerald-800/80 dark:text-emerald-300/80">Registrar carga</span>
+                                    </span>
+                                </a>
+                                <a href="{{ route('routine-templates.index') }}" class="group flex items-center gap-4 rounded-2xl border border-violet-200/80 bg-gradient-to-br from-violet-50 to-white p-4 shadow-sm ring-1 ring-violet-100 transition hover:-translate-y-0.5 hover:shadow-md dark:border-violet-800/50 dark:from-violet-950/30 dark:to-slate-900 dark:ring-violet-900/30">
+                                    <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-600 text-white shadow-sm" aria-hidden="true">
+                                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" /><path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6Z" /></svg>
+                                    </span>
+                                    <span class="min-w-0 text-left">
+                                        <span class="block font-semibold text-violet-950 group-hover:text-violet-900 dark:text-violet-100">Plantillas</span>
+                                        <span class="mt-0.5 block text-xs text-violet-800/80 dark:text-violet-300/80">Rutinas guardadas</span>
+                                    </span>
+                                </a>
                             </div>
                         </div>
                     @endif
@@ -88,6 +123,7 @@
                             </div>
                         </div>
                     @endif
+                </div>
                 </div>
             </div>
         </div>

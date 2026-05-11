@@ -9,11 +9,6 @@ class DashboardController extends Controller
 {
     public function __invoke(Request $request): View
     {
-        $user = $request->user();
-        $workoutStreak = $user->role === 'user' ? $user->workoutStreak() : null;
-
-        return view('dashboard', [
-            'workoutStreak' => $workoutStreak,
-        ]);
+        return view('dashboard');
     }
 }
