@@ -3,18 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Exercise;
 use App\Models\Workout;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class GymController extends Controller
 {
-    public function getCategories() {
-        return response()->json(Category::all(), 200);
-    }
-
     public function getExercises() {
         return response()->json(Exercise::with('category')->get(), 200);
     }

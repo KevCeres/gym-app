@@ -8,6 +8,13 @@ class Workout extends Model
 {
     protected $fillable = ['user_id', 'exercise_id', 'reps', 'weight', 'workout_date'];
 
+    protected function casts(): array
+    {
+        return [
+            'workout_date' => 'date',
+        ];
+    }
+
     // El progreso pertenece a un usuario
     public function user()
     {

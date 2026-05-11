@@ -4,15 +4,19 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <form action="{{ route('categories.store') }}" method="POST">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white p-6 shadow-sm sm:rounded-lg border border-gray-100">
+                <form action="{{ route('categories.store') }}" method="POST" class="space-y-6">
                     @csrf
-                    <div class="mb-4">
-                        <label class="block text-gray-700 font-bold mb-2">Nombre del Grupo Muscular:</label>
-                        <input type="text" name="name" class="w-full border-gray-300 rounded shadow-sm focus:border-blue-500" required>
+                    <div>
+                        <x-input-label for="name" value="Nombre del grupo muscular" />
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
-                    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Guardar</button>
+                    <div class="flex items-center gap-3">
+                        <x-primary-button>Guardar</x-primary-button>
+                        <a href="{{ route('categories.index') }}" class="text-sm text-gray-600 hover:text-gray-900">Cancelar</a>
+                    </div>
                 </form>
             </div>
         </div>
