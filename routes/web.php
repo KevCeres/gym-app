@@ -5,7 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoutineTemplateController;
-use App\Http\Controllers\UserController; // 1. IMPORTANTE: Agregamos el de Usuarios
+use App\Http\Controllers\UserController; 
 use App\Http\Controllers\WorkoutController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +19,7 @@ Route::get('/dashboard', DashboardController::class)->middleware(['auth', 'verif
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('exercises', ExerciseController::class);
-    Route::resource('users', UserController::class); // 2. Agregamos el recurso de usuarios
+    Route::resource('users', UserController::class);
 });
 
 // Rutinas y progreso: solo rol atleta (user), no admin
